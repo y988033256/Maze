@@ -98,16 +98,22 @@ void readfile()
 
 	if (myfile.is_open())
 	{
-		cout << "Read file completed" << endl;
 		cout << endl;
 		myfile.seekg(0, std::ios::end);
 		int len = myfile.tellg();
 		myfile.seekg(0, std::ios::beg);
 		mazewall = new char[len];
 		myfile.read(mazewall, len);
-		mazewall[len-1]= '\0';
+		int i = 0;
+		for (; i < len; i++)
+			if (mazewall[i] < 0)
+				break;
+		mazewall[i] = 0;
 		cout << mazewall;
 		delete[]mazewall;
+		cout << endl;
+		cout << "Read file completed" << endl;
+		cout << "" << endl;
 	}
 	else
 	{
