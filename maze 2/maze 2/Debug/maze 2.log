@@ -1,4 +1,5 @@
-﻿  源.cpp
-D:\Github\Maze\maze 2\maze 2\源.cpp(93,34): warning C4101: “e”: 未引用的局部变量
-D:\Github\Maze\maze 2\maze 2\源.cpp(111,11): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
+﻿  maze2.cpp
+D:\Github\Maze\maze 2\maze 2\maze2.cpp(96,21): warning C4018: “<”: 有符号/无符号不匹配
+D:\Github\Maze\maze 2\maze 2\maze2.cpp(116,11): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
+D:\Github\Maze\maze 2\maze 2\maze2.cpp(193,34): warning C4101: “e”: 未引用的局部变量
   maze 2.vcxproj -> D:\Github\Maze\maze 2\Debug\maze 2.exe

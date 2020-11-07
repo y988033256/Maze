@@ -2,14 +2,24 @@
 #include <fstream>
 #include <stdlib.h>
 #include <time.h>
+#include <vector>
+//#include <windows.h>
+
 
 using namespace std;
 
+vector<char**> record;
+
+void sleep() 
+{
+	for (long i = 0; i < 500000000; i++)     
+	{
+		;
+	}
+}
 int randomnumber()
 {
-	int i;
-	i = rand() % 2;
-	return i;
+	return (rand() % 2);
 }
 char** maze(int length, int width, int exit, int player)
 {
@@ -64,7 +74,11 @@ char** maze(int length, int width, int exit, int player)
 	for (int i = 0; i < player; i++) {   // player 
 		mazewall[1][i + 1] = 'P';
 	}
+	return mazewall;
+}
 
+void showMazeWall(char** mazewall, int length, int width)
+{
 	for (int i = 0; i < length; ++i)   //  generate maze
 	{
 		for (int j = 0; j < width; ++j)
@@ -73,30 +87,21 @@ char** maze(int length, int width, int exit, int player)
 		}
 		cout << endl;
 	}
-	return mazewall;
 }
-void writefile(int length, int width, char** mazewall)
+
+void showMazewalls(vector<char**> li, int length, int width)
 {
-	ofstream outputfile;
-	outputfile.exceptions(ifstream::badbit);
-	try {
-		outputfile.open("maze.txt");
-		for (int i = 0; i < length; i++)
-		{
-			for (int j = 0; j < width; j++)
-			{
-				outputfile << mazewall[i][j];
-			}
-			outputfile << '\n';
+	for (int y = 0; y < length; y++)
+	{
+		for (int i = 0; i < li.size(); i++) {
+			char* row = li[i][y];
+			row[width] = 0;
+			cout << row << '\t';
 		}
+		cout << endl;
 	}
-	catch (const ifstream::failure& e) {
-		cout << "Exception opening/reading file";
-	}
-	outputfile.close();
-	
-	
 }
+
 void readfile()
 {
 	char* mazewall;
@@ -122,14 +127,12 @@ void readfile()
 		cout << endl;
 		cout << "Read file completed" << endl;
 		cout << "" << endl;
-		
+		myfile.close();
 	}
 	else
 	{
 		cout << "Couldn't open the file!" << endl;
 	}
-	myfile.close();
-	
 }
 
 int InputInteger(int min, int max, char* warning)
@@ -150,13 +153,105 @@ int InputInteger(int min, int max, char* warning)
 	return inputNumber;
 }
 
+char** mazeCopy(char** mazewall, int length, int width)
+{
+	char** new_mazewall = new char* [length];
+	for (int i = 0; i < length; ++i)
+		new_mazewall[i] = new char[width];
 
+	for (int i = 0; i < length; i++)      // mazewall 
+	{
+		for (int j = 0; j < width; j++)
+			new_mazewall[i][j] = mazewall[i][j];
+	}
 
+	return(new_mazewall);
+}
+
+void saveRecord(int length, int width)
+{
+	char** mazewall;
+	ofstream outputfile;
+	outputfile.exceptions(ifstream::badbit);
+	try {
+		outputfile.open("maze.txt");
+		int len = record.size();
+
+		for (int l = 0; l < len; l++)
+		{
+			mazewall = record[l];
+			for (int i = 0; i < length; i++)
+			{
+				for (int j = 0; j < width; j++)
+					outputfile << mazewall[i][j];
+				outputfile << endl;
+			}
+
+			outputfile << endl;
+		}
+	}
+	catch (const ifstream::failure& e) {
+		cout << "Exception opening/reading file";
+	}
+	outputfile.close();
+}
+
+void play() 
+{
+	if (record.size())
+		record.clear();
+	int length = InputInteger(10, 50, new char[] {"Enter the length of the maze: "});
+	int width = InputInteger(10, 50, new char[] {"Enter the width of the maze: "});
+	int exit = InputInteger(1, 2, new char[] {"Enter the number of exits for the maze(No more than 2): "});
+	int player = InputInteger(1, 2, new char[] {"Enter the number of player for the maze(No more than 2): "});
+	int numberofmaze = InputInteger(1, 5, new char[] {"Enter the number of maze you want to generate(No more than 5): "});
+	vector<char**> li;
+	
+	for (int i = 0; i < numberofmaze; i++)
+		li.push_back(maze(length, width, exit, player));
+
+	showMazewalls(li, length, width);
+
+	int Choice = InputInteger(1, numberofmaze, new char[] {"Enter your Choice of the maze: "});
+	char** mazewall = li[Choice - 1];
+	showMazeWall(mazewall, length, width);
+	
+	while (true) 
+	{
+		cout << endl;
+		//mazewall[1][1] = 'P';
+		for (int i = 1; i < length/2; i++)      
+		{
+			if (mazewall[i + 1][1] == ' ')
+			{
+				mazewall[i][1] = ' ';
+				mazewall[i + 1][1] = 'P';
+				record.push_back(mazeCopy(mazewall, length, width));
+				showMazeWall(record.back(), length, width);
+				sleep();
+			}
+		}
+		for (int i = 1; i < width / 2; i++)
+		{
+			if (mazewall[length/2][i+1] == ' ')
+			{
+				mazewall[length / 2][i] = ' ';
+				mazewall[length / 2][i+1] = 'P';
+				record.push_back(mazeCopy(mazewall, length, width));
+				showMazeWall(record.back(), length, width);
+				sleep();
+			}
+		}
+		break;
+	}
+	cout << endl;
+	saveRecord(length, width);
+	cout << "File saved" << endl;	
+	cout << endl;
+}
 
 int main(){	
-	int option;
-	while (true) {
-
+	   
 		srand((unsigned)time(NULL));
 		cout << " **************************************************************** " << endl;
 		cout << " **************************************************************** " << endl;
@@ -172,29 +267,27 @@ int main(){
 		cout << endl;
 		cout << " _________________________________________________________________" << endl;
 		cout << endl;
-		cout << " 1) New Game " << endl;
-		cout << " 2) Open the previous game" << endl;
-		cout << " 3) Quit" << endl;
-		cout << endl;
-
-		cout << "Enter the option number: " << endl;
-		cin >> option;
-		switch (option)
-		{
-		case 1:
-
-		case 2:
-			readfile();
-		case 3:
-			exit(1);
+		
+		while (true) {
+			char option[10];
+			cout << " 1) New Game " << endl;
+			cout << " 2) Open the previous game" << endl;
+			cout << " 3) Quit" << endl;
+			cout << endl;
+			cout << "Enter the option number: " << endl;
+			cin >> option;
+			switch (option[0])
+			{
+			case '1':
+				play();
+				break;
+			case '2':
+				readfile();
+				break;
+			case '3':
+				exit(1);
+			default:
+				cout << "Please enter a valid integer in Range (1 - 3)" << endl;
+			}
 		}
-		
-		int length = InputInteger(10, 50, new char[] {"Enter the length of the maze: "});
-		int width = InputInteger(10, 50, new char[] {"Enter the width of the maze: "});
-		int exit = InputInteger(1, 2, new char[] {"Enter the number of exits for the maze(No more than 2): "});
-		int player = InputInteger(1, 2, new char[] {"Enter the number of player for the maze(No more than 2): "});
-		writefile(length, width, maze(length, width, exit, player));
-		cout << " _________________________________________________________________" << endl;
-		
-	}
 }
