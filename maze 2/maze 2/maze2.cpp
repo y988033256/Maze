@@ -216,33 +216,65 @@ void play()
 	char** mazewall = li[Choice - 1];
 	showMazeWall(mazewall, length, width);
 	
-	while (true) 
+	vector<char*> p1path;
+
+	for (char i = 1; i < length / 2; i++)    // vertical roads
+		p1path.push_back(new char[] {i, 1});
+
+	for (char i = 1; i < width / 2; i++)    // horizontal roads	
+		p1path.push_back(new char[] {char(length / 2), i});
+
+	vector<char*> p2path;
+	for (char i = 1; i < width / 2; i++) {   // horizontal roads	
+		p2path.push_back(new char[] {1, i});
+	}
+	for (char i = 1; i < length / 2; i++) {   // vertical roads
+		p2path.push_back(new char[] {i, char(width / 2)});
+	}
+
+	showMazeWall(mazewall, length, width);
+
+	char P1X = 1;
+	char P1Y = 1;
+	char P2X = 1;
+	char P2Y = 2;
+	cout << endl;
+	cout << "Go!!!" << endl;
+	cout << endl;
+	bool exitflag = false;
+
+	int p1 = p1path.size();
+	int p2 = p2path.size();
+	int bs = p1 > p2 ? p1 : p2;
+
+	sleep();
+	for (int i = 1; i < bs; i++)
 	{
-		cout << endl;
-		//mazewall[1][1] = 'P';
-		for (int i = 1; i < length/2; i++)      
+		if (i < p1)  // p1 self movement 
 		{
-			if (mazewall[i + 1][1] == ' ')
+			cout << endl;
+			mazewall[P1Y][P1X] = ' ';
+			P1X = p1path[i][1];
+			P1Y = p1path[i][0];
+			mazewall[P1Y][P1X] = 'P';
+			record.push_back(mazeCopy(mazewall, length, width));
+			showMazeWall(record.back(), length, width);
+			sleep();
+		}
+		if (player == 2) // p2 self movement 
+		{		
+			if (i < p2)
 			{
-				mazewall[i][1] = ' ';
-				mazewall[i + 1][1] = 'P';
+				cout << endl;
+				mazewall[P2Y][P2X] = ' ';
+				P2X = p2path[i][1];
+				P2Y = p2path[i][0];
+				mazewall[P2Y][P2X] = 'P';
 				record.push_back(mazeCopy(mazewall, length, width));
 				showMazeWall(record.back(), length, width);
 				sleep();
 			}
 		}
-		for (int i = 1; i < width / 2; i++)
-		{
-			if (mazewall[length/2][i+1] == ' ')
-			{
-				mazewall[length / 2][i] = ' ';
-				mazewall[length / 2][i+1] = 'P';
-				record.push_back(mazeCopy(mazewall, length, width));
-				showMazeWall(record.back(), length, width);
-				sleep();
-			}
-		}
-		break;
 	}
 	cout << endl;
 	saveRecord(length, width);
