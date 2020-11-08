@@ -143,12 +143,16 @@ int InputInteger(int min, int max, char* warning)
 int main() 
 {	
 	srand((unsigned)time(NULL));
-	int length = InputInteger(10, 50, new char[] {"Enter the length of the maze: "});
-	int width = InputInteger(10, 50, new char[] {"Enter the width of the maze: "});
-	int exit = InputInteger(1, 2, new char[] {"Enter the number of exits for the maze(No more than 2): "});	
-	writefile(length, width, maze( length,  width, exit));
-	cout <<"______________________________________________________________________________________"<< endl;
-	readfile();
+	while (true)
+	{
+		int length = InputInteger(10, 50, new char[] {"Enter the length of the maze: "});
+		int width = InputInteger(10, 50, new char[] {"Enter the width of the maze: "});
+		int exit = InputInteger(1, 2, new char[] {"Enter the number of exits for the maze(No more than 2): "});
+		writefile(length, width, maze(length, width, exit));
+		cout << "______________________________________________________________________________________" << endl;
+		readfile();
+	}
+	
 }
 
 

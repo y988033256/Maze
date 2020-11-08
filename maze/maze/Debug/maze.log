@@ -1,4 +1,4 @@
 ﻿  maze.cpp
-D:\Master\C++\作业\maze\maze\maze.cpp(88,35): warning C4101: “e”: 未引用的局部变量
-D:\Master\C++\作业\maze\maze\maze.cpp(104,11): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
-  maze.vcxproj -> D:\Master\C++\作业\maze\Debug\maze.exe
+D:\Github\Maze\maze\maze\maze.cpp(88,35): warning C4101: “e”: 未引用的局部变量
+D:\Github\Maze\maze\maze\maze.cpp(103,11): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
+  maze.vcxproj -> D:\Github\Maze\maze\Debug\maze.exe
